@@ -9,7 +9,7 @@ export default function ProfilPage() {
   const [tab, setTab] = useState("sejarah");
   const [sejarah, setSejarah] = useState<any>({ sejarah: "", visi_misi: "[]" });
   const [aparatur, setAparatur] = useState<any[]>([]);
-  useEffect(() => { api.getSejarah().then(setSejarah).catch(() => {}); api.getAparatur().then(setAparatur).catch(() => {}); }, []);
+  useEffect(() => { api.getProfilSejarah().then(setSejarah).catch(() => {}); api.getAparatur().then(setAparatur).catch(() => {}); }, []);
   const visiMisi = typeof sejarah.visi_misi === 'string' ? JSON.parse(sejarah.visi_misi || '[]') : sejarah.visi_misi || [];
 
   const tabs = [

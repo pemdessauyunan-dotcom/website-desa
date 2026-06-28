@@ -154,7 +154,7 @@ function WidgetPbbBansos() {
   const [pbbStats, setPbbStats] = useState({ total: 10, lunas: 6, pending: 3 });
   const [bansosStats, setBansosStats] = useState<any[]>([]);
   useEffect(() => {
-    api.getPbbStats().then(setPbbStats).catch(() => {});
+    api.getPBBStats().then(setPbbStats).catch(() => {});
     api.getBansosStats().then(setBansosStats).catch(() => {});
   }, []);
 
@@ -239,7 +239,7 @@ function WidgetPbbBansos() {
 // ===== SECTION 6: BERITA =====
 function BeritaSection() {
   const [berita, setBerita] = useState<any[]>([]);
-  useEffect(() => { api.getBerita("?limit=3").then(d => setBerita(d.data || [])).catch(() => {}); }, []);
+  useEffect(() => { api.getBerita({ limit: 3 }).then(d => setBerita(d.data || [])).catch(() => {}); }, []);
 
   return (
     <section className="py-16 bg-slate-50">

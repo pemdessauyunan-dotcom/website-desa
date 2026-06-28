@@ -1,6 +1,6 @@
 "use client";
 import Link from 'next/link';
-import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Youtube, ChevronRight, ArrowUp } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Globe, Camera, Video, ChevronRight, ArrowUp } from 'lucide-react';
 
 const quickLinks = [
   { name: 'Beranda', href: '/' },
@@ -45,7 +45,7 @@ export default function Footer() {
               Website resmi Pemerintah Desa Kasomalang Kulon. Melayani masyarakat dengan transparan, profesional, dan bertanggung jawab.
             </p>
             <div className="flex gap-3">
-              {[Facebook, Instagram, Youtube].map((Icon, i) => (
+              {([Globe, Camera, Video] as const).map((Icon, i) => (
                 <a key={i} href="#" className="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary-600 transition-all hover:scale-110">
                   <Icon className="w-4 h-4 text-white" />
                 </a>

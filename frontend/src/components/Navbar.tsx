@@ -5,8 +5,7 @@ import {
   Menu, X, Search, ChevronDown, Home, 
   Info, BarChart3, Landmark, Heart, 
   FileText, Megaphone, Image, LogIn, 
-  Phone, Mail, MapPin, Clock,
-  Facebook, Instagram, Youtube, Twitter,
+  Phone, Mail, MapPin, Clock, Globe, Camera, Video,
   ChevronRight, ExternalLink
 } from 'lucide-react';
 import Link from 'next/link';

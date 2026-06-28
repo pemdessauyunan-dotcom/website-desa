@@ -14,7 +14,8 @@ export default function BeritaPage() {
 
   useEffect(() => {
     setLoading(true);
-    const params = kategori === "Semua" ? `?limit=12&page=${page}` : `?limit=12&page=${page}&kategori=${kategori}`;
+    const params = { limit: 12, page };
+    if (kategori !== "Semua") (params as any).kategori = kategori;
     api.getBerita(params).then(d => { setBerita(d.data || []); setLoading(false); }).catch(() => setLoading(false));
     api.getKategoriBerita().then(d => setAllKategori(["Semua", ...d])).catch(() => {});
   }, [kategori, page]);
