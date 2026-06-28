@@ -1,0 +1,211 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  password      String
+  nama          String
+  role          String   @default("WARGA") // ADMIN, RT, KOLEKTOR, WARGA
+  rt            String?
+  rw            String?
+  active        Boolean  @default(true)
+  feature_flags String?  // JSON string
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  logs          LogAktivitas[]
+}
+
+model Warga {
+  nik           String   @id
+  nama          String
+  alamat        String
+  rt            String
+  rw            String
+  kelamin       String   // LAKI-LAKI / PEREMPUAN
+  tempat_lahir  String?
+  tanggal_lahir String?
+  pendidikan    String?
+  pekerjaan     String?
+  agama         String?
+  status_kawin  String?
+  no_kk         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  penerimaBansos PenerimaBansos[]
+
+  @@map("warga")
+}
+
+model PembayaranPbb {
+  id              Int      @id @default(autoincrement())
+  nop             String
+  nama_wajib_pajak String
+  alamat_objek    String
+  rt              String
+  rw              String
+  luas_tanah      Float?
+  luas_bangunan   Float?
+  njop            Float?
+  jumlah_pajak    Float?
+  jumlah_dibayar  Float
+  tahun_pajak Int
+  kolektor_id     Int?
+  bukti_url       String?
+  status          String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  catatan         String?
+  approved_by     Int?
+  approved_at     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("pembayaran_pbb")
+}
+
+model ProgramBansos {
+  id          Int      @id @default(autoincrement())
+  nama        String
+  sumber_dana String
+  periode     String
+  nominal     Float
+  kuota       Int
+  aktif       Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  penerima    PenerimaBansos[]
+
+  @@map("program_bansos")
+}
+
+model PenerimaBansos {
+  id              Int      @id @default(autoincrement())
+  nik             String
+  nama            String
+  alamat          String
+  rt              String
+  rw              String
+  program_id      Int
+  status          String   @default("DIUSULKAN") // DIUSULKAN, DISETUJUI, DITOLAK
+  catatan         String?
+  diusulkan_oleh  Int?
+  diverifikasi_oleh Int?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  warga           Warga    @relation(fields: [nik], references: [nik])
+  program         ProgramBansos @relation(fields: [program_id], references: [id])
+
+  @@map("penerima_bansos")
+}
+
+model Berita {
+  id        Int      @id @default(autoincrement())
+  judul     String
+  slug      String   @unique
+  konten    String
+  kategori  String?
+  gambar    String?
+  penulis   String?
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("berita")
+}
+
+model Pengaduan {
+  id            Int      @id @default(autoincrement())
+  nama_pengirim String?
+  kontak        String?
+  isi           String
+  anonim        Boolean  @default(false)
+  status        String   @default("DITERIMA") // DITERIMA, DIPROSES, SELESAI
+  balasan       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("pengaduan")
+}
+
+model Galeri {
+  id        Int      @id @default(autoincrement())
+  judul     String
+  deskripsi String?
+  file_url  String
+  tipe      String   // FOTO, VIDEO
+  album     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("galeri")
+}
+
+model Aparatur {
+  id        Int      @id @default(autoincrement())
+  nama      String
+  jabatan   String
+  foto      String?
+  urutan    Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("aparatur")
+}
+
+model InfoDesa {
+  id        Int      @id @default(autoincrement())
+  alamat    String?
+  kontak    String?
+  jam_kerja String?
+  sejarah   String?
+  visi_misi String?  // JSON string
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("info_desa")
+}
+
+model StatistikPenduduk {
+  id                   Int      @id @default(autoincrement())
+  total                Int      @default(0)
+  laki_laki            Int      @default(0)
+  perempuan            Int      @default(0)
+  kk                   Int      @default(0)
+  rw_count             Int      @default(0)
+  rt_count             Int      @default(0)
+  data_per_usia        String?  // JSON string
+  data_per_pendidikan  String?  // JSON string
+  data_per_pekerjaan   String?  // JSON string
+  data_per_kawin       String?  // JSON string
+  data_per_agama       String?  // JSON string
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@map("statistik_penduduk")
+}
+
+model Pengunjung {
+  id        Int      @id @default(autoincrement())
+  tanggal   String   // YYYY-MM-DD
+  hit       Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("pengunjung")
+}
+
+model LogAktivitas {
+  id        Int      @id @default(autoincrement())
+  user_id   Int?
+  aksi      String
+  detail    String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [user_id], references: [id])
+
+  @@map("log_aktivitas")
+}
