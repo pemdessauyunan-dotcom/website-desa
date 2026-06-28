@@ -133,8 +133,9 @@ function StatistikSection() {
               </div>
               <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
                 className="text-3xl md:text-4xl font-bold text-slate-800 mb-1"
+                suppressHydrationWarning
               >
-                {item.value.toLocaleString()}
+                {String(item.value).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               </motion.p>
               <p className="text-sm text-slate-500">{item.label}</p>
             </motion.div>
